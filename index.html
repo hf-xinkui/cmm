@@ -74,7 +74,7 @@
                             type="text" 
                             id="searchKeyword" 
                             class="form-input" 
-                            placeholder="证书编号/身份证号"
+                            placeholder="请输入证书编号"
                         >
                     </div>
                     <div>
@@ -126,7 +126,7 @@
             <div class="inline-flex flex-col items-center justify-center p-6 bg-white rounded-lg shadow-md">
                 <i class="fa-solid fa-file-circle-xmark text-5xl text-gray-300 mb-4"></i>
                 <h3 class="text-xl font-medium text-gray-800 mb-2">未找到相关证书信息</h3>
-                <p class="text-gray-600 mb-4">请检查证书编号或身份证号是否正确</p>
+                <p class="text-gray-600 mb-4">请检查证书编号是否正确</p>
                 <button id="retryBtn" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
                     重新搜索
                 </button>
@@ -164,11 +164,12 @@
     </footer>
     <!-- JavaScript 逻辑 -->
     <script>
-        // 模拟数据库 - 存储证书信息
+        // 模拟数据库 - 存储证书信息，新增certType证书类型
         let certDatabase = [
-            { certNo: "CZ20260001", idCard: "110101199001011234", name: "张三", issueDate: "2026-01-10", validity: "2026-01-10至2036-01-10" },
-            { certNo: "CZ20260002", idCard: "310101199002021234", name: "李四", issueDate: "2026-02-15", validity: "2026-02-15至2036-02-15" },
-            { certNo: "PC133260814TC13412", idCard: "340881200303013412", name: "朱鹏宇", issueDate: "2026-08-14", validity: "2026-08-14至2031-08-13" }
+            { certNo: "CZ20260001", idCard: "110101199001011234", name: "张三", certType:"通用操作员", issueDate: "2026-01-10", validity: "2026-01-10至2036-01-10" },
+            { certNo: "CZ20260002", idCard: "310101199002021234", name: "李四", certType:"通用操作员", issueDate: "2026-02-15", validity: "2026-02-15至2036-02-15" },
+            { certNo: "PC133260814TC13412", idCard: "340881200303013412", name: "朱鹏宇", certType:"PC‑DMIS操作员", issueDate: "2026-08-14", validity: "2026-08-14至2031-08-13" },
+            { certNo: "CA133260814TS13412", idCard: "340881200303013412", name: "朱鹏宇", certType:"CALYPSO操作员", issueDate: "2026-08-14", validity: "2026-08-14至2031-08-13" }
         ];
         
         // 隐私政策和服务协议
@@ -177,7 +178,7 @@
 **生效日期**：2026年2月27日
 本网站（以下简称“本站”）深知个人信息对您的重要性，将按照法律法规要求，秉持**合法、必要、最小化**原则收集和使用您的信息，同时为您提供查询服务相关的隐私保护。本站特制定本隐私政策，明确信息处理规则，您使用本站服务即视为认可并同意本政策全部内容，**本站保留对本政策的最终解释权**。
 #### 一、信息收集范围
-1. 您在使用本站证书查询服务时，主动输入的**证书编号、身份证号**等查询关键词，该信息仅用于本次查询操作的结果匹配，不做其他用途。
+1. 您在使用本站证书查询服务时，主动输入的**证书编号**等查询关键词，该信息仅用于本次查询操作的结果匹配，不做其他用途。
 2. 为防范恶意查询、保障服务稳定，本站会自动记录您的**查询IP地址、查询时间、查询结果**等非个人敏感信息，该类信息仅用于系统风控和查询记录管理，不与任何个人身份信息关联。
 3. 本站**不会主动收集**您的姓名、手机号、邮箱、设备信息等其他个人信息，除非您主动向本站提供。
 #### 二、信息使用与存储
@@ -202,7 +203,7 @@
 **生效日期**：2026年2月27日
 本服务协议（以下简称“本协议”）是您与本站之间关于使用本站证书查询服务的**法律约定**，您通过任何方式使用本站服务，即视为您已仔细阅读、充分理解并自愿接受本协议全部条款，**本站保留对本协议的最终解释权**。
 #### 一、服务内容
-1. 本站为您提供**证书信息在线查询服务**，您可通过输入证书编号或身份证号，查询本站已录入的对应证书相关信息（包括证书编号、持证人姓名、发证日期、有效期等）。
+1. 本站为您提供**证书信息在线查询服务**，您可通过输入证书编号，查询本站已录入的对应证书相关信息（包括证书编号、证书类型、持证人姓名、发证日期、有效期等）。
 2. 本站的服务仅为**信息展示**，不提供证书真伪核验、证书补发/换发、信息修改等其他附加服务，相关增值服务需联系证书颁发机构办理。
 3. 本站有权根据系统维护、技术升级、业务调整等需要，临时或长期变更、暂停或终止全部/部分服务，且**无需提前通知您**，不承担因此给您造成的任何损失。
 #### 二、您的权利与义务
@@ -347,31 +348,27 @@
             // 自动清理过期记录
             clearExpiredRecords();
         }
-        // 验证身份证号格式
-        function validateIdCard(idCard) {
-            const idCardRegex = /^\d{18}$/;
-            return idCardRegex.test(idCard);
-        }
+
         // 查询证书信息
-        async function queryCertInfo() {
+        async function queryCertInfo(isQrScan = false, keywordFromQr = "") {
             // 检查IP限制
             const userIP = getUserIP();
             if (checkIPLimit(userIP)) {
                 return;
             }
             
-            const keyword = searchKeywordInput.value.trim();
-            
+            let keyword;
+            if(isQrScan){
+                // 扫码过来：可以身份证号 / 证书编号都支持
+                keyword = keywordFromQr.trim();
+            }else{
+                // 手动页面输入：仅允许证书编号
+                keyword = searchKeywordInput.value.trim();
+            }
+
             // 验证输入
             if (!keyword) {
-                errorText.textContent = '请输入证书编号或身份证号';
-                errorTip.classList.remove('hidden');
-                return;
-            }
-            
-            // 如果输入的是身份证号，验证格式
-            if (keyword.length === 18 && !validateIdCard(keyword)) {
-                errorText.textContent = '身份证号格式不正确（应为18位数字）';
+                errorText.textContent = '请输入证书编号';
                 errorTip.classList.remove('hidden');
                 return;
             }
@@ -384,10 +381,16 @@
                 // 模拟网络延迟
                 await new Promise(resolve => setTimeout(resolve, 800));
                 
-                // 匹配证书编号 或 身份证号
-                const results = certDatabase.filter(item => 
-                    item.certNo === keyword || item.idCard === keyword
-                );
+                let results;
+                if(isQrScan){
+                    //扫码：支持证书编号 OR 身份证号
+                    results = certDatabase.filter(item => 
+                        item.certNo === keyword || item.idCard === keyword
+                    );
+                }else{
+                    //手动输入：仅匹配证书编号
+                    results = certDatabase.filter(item => item.certNo === keyword);
+                }
                 
                 // 记录查询行为
                 recordQuery(userIP, keyword, results.length > 0);
@@ -403,7 +406,7 @@
                 searchTip.classList.add('hidden');
             }
         }
-        // 渲染查询结果
+        // 渲染查询结果，新增证书类型字段
         function renderResults(results, keyword) {
             queryKeyword.textContent = `查询关键词：${keyword}`;
             resultContent.innerHTML = '';
@@ -423,6 +426,10 @@
                         <div>
                             <span class="text-gray-500">证书编号：</span>
                             <span class="text-gray-800 font-medium">${result.certNo}</span>
+                        </div>
+                        <div>
+                            <span class="text-gray-500">证书类型：</span>
+                            <span class="text-gray-800 font-medium">${result.certType}</span>
                         </div>
                         <div>
                             <span class="text-gray-500">身份证号：</span>
@@ -468,15 +475,17 @@
             termsModal.classList.remove('hidden');
         }
         // 绑定事件
-        // 查询相关
-        searchBtn.addEventListener('click', queryCertInfo);
+        // 查询按钮：手动输入查询，只匹配证书编号
+        searchBtn.addEventListener('click', ()=>{
+            queryCertInfo(false,"");
+        });
         resetBtn.addEventListener('click', initPage);
         retryBtn.addEventListener('click', initPage);
         
         // 回车查询
         searchKeywordInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
-                queryCertInfo();
+                queryCertInfo(false,"");
             }
         });
         // 条款相关事件
@@ -502,7 +511,8 @@
             const sn = urlParams.get('sn');
             if(sn){
                 searchKeywordInput.value = sn;
-                queryCertInfo();
+                //扫码模式：支持身份证/证书编号
+                queryCertInfo(true, sn);
             }
         });
         // 定时清理过期记录（每24小时）
