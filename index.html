@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -58,20 +57,19 @@
             </div>
         </div>
     </header>
-
     <!-- 主要内容区 -->
     <main class="flex-grow container mx-auto px-4 py-8">
-        <!-- 证书查询区域 - 输入框+按钮行内布局 + 整体居中 -->
+        <!-- 证书查询区域 - 输入框+按钮改为上下布局，输入框加宽 -->
         <section id="querySection" class="max-w-2xl mx-auto mb-10">
             <div class="text-center mb-6">
                 <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-gray-800 mb-2">证书信息查询</h2>
                 <p class="text-gray-600">本网站只提供查询并展示相应内容，请妥善保管相应信息。</p>
             </div>
             
-            <!-- 输入框+按钮行内布局 + 整体左右居中 -->
+            <!-- 修改：w-full，flex-col上下布局 -->
             <div class="bg-white rounded-lg shadow-md p-6 mb-4">
-                <div class="w-1/2 mx-auto flex items-center gap-2">
-                    <div class="flex-1">
+                <div class="w-full mx-auto flex flex-col items-center gap-3">
+                    <div class="w-full">
                         <input 
                             type="text" 
                             id="searchKeyword" 
@@ -80,7 +78,7 @@
                         >
                     </div>
                     <div>
-                        <button id="searchBtn" class="query-btn h-full">
+                        <button id="searchBtn" class="query-btn">
                             <i class="fa-solid fa-search mr-1"></i>
                             查询
                         </button>
@@ -103,7 +101,6 @@
                 <span id="limitText">您的IP查询次数过多，请1小时后再试</span>
             </div>
         </section>
-
         <!-- 结果展示区域 -->
         <section id="resultSection" class="max-w-3xl mx-auto hidden">
             <div class="bg-white rounded-lg shadow-md p-6 mb-6">
@@ -124,7 +121,6 @@
                 </button>
             </div>
         </section>
-
         <!-- 无结果提示 -->
         <section id="noResultSection" class="max-w-3xl mx-auto hidden text-center py-10">
             <div class="inline-flex flex-col items-center justify-center p-6 bg-white rounded-lg shadow-md">
@@ -136,7 +132,6 @@
                 </button>
             </div>
         </section>
-
         <!-- 条款弹窗 -->
         <div id="termsModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
             <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[80vh] overflow-auto p-6">
@@ -152,7 +147,6 @@
             </div>
         </div>
     </main>
-
     <!-- 页脚 -->
     <footer class="bg-gray-800 text-white py-6">
         <div class="container mx-auto px-4">
@@ -168,13 +162,13 @@
             </div>
         </div>
     </footer>
-
     <!-- JavaScript 逻辑 -->
     <script>
-        // 模拟数据库 - 存储证书信息
+        // 模拟数据库 - 存储证书信息，已更新姓名为朱鹏宇
         let certDatabase = [
             { certNo: "CZ20260001", idCard: "110101199001011234", name: "张三", issueDate: "2026-01-10", validity: "2026-01-10至2036-01-10" },
-            { certNo: "CZ20260002", idCard: "310101199002021234", name: "李四", issueDate: "2026-02-15", validity: "2026-02-15至2036-02-15" }
+            { certNo: "CZ20260002", idCard: "310101199002021234", name: "李四", issueDate: "2026-02-15", validity: "2026-02-15至2036-02-15" },
+            { certNo: "PC133260814TC13412", idCard: "340881200303013412", name: "朱鹏宇", issueDate: "2026-08-14", validity: "2026-08-14至2031-08-13" }
         ];
         
         // 隐私政策和服务协议
@@ -182,72 +176,59 @@
             privacyPolicy: `### 隐私政策
 **生效日期**：2026年2月27日
 本网站（以下简称“本站”）深知个人信息对您的重要性，将按照法律法规要求，秉持**合法、必要、最小化**原则收集和使用您的信息，同时为您提供查询服务相关的隐私保护。本站特制定本隐私政策，明确信息处理规则，您使用本站服务即视为认可并同意本政策全部内容，**本站保留对本政策的最终解释权**。
-
 #### 一、信息收集范围
 1. 您在使用本站证书查询服务时，主动输入的**证书编号、身份证号**等查询关键词，该信息仅用于本次查询操作的结果匹配，不做其他用途。
 2. 为防范恶意查询、保障服务稳定，本站会自动记录您的**查询IP地址、查询时间、查询结果**等非个人敏感信息，该类信息仅用于系统风控和查询记录管理，不与任何个人身份信息关联。
 3. 本站**不会主动收集**您的姓名、手机号、邮箱、设备信息等其他个人信息，除非您主动向本站提供。
-
 #### 二、信息使用与存储
 1. 收集的查询关键词仅用于即时匹配证书信息，查询完成后不单独存储该关键词；查询IP、时间、结果等记录将在**7天内自动清理**，无长期存储计划。
 2. 所有记录信息仅在本站前端本地存储，不进行服务器端上传、同步或共享，您可自行通过设备清除相关本地存储数据。
 3. 本站不会将您的任何信息出售、出租、转让给任何第三方，也不会将信息用于本政策约定之外的任何用途。
-
 #### 三、信息保护措施
 1. 本站采用前端本地数据存储机制，无服务器端数据交互，最大程度降低信息泄露风险；同时通过IP查询频率限制，防范恶意爬取、盗用信息的行为。
 2. 您的身份证号等敏感信息在查询结果展示时会进行**脱敏处理**（隐藏中间8位），避免敏感信息直接暴露。
 3. 因您的设备故障、网络攻击、第三方软件窃取等非本站原因导致的信息泄露，本站不承担任何责任。
-
 #### 四、您的权利
 1. 您可随时停止使用本站服务，停止后本站将不再收集您的任何新信息，且原有存储的查询记录将按约定时间自动清理。
 2. 您可自行操作清除设备上本站的本地存储数据，具体操作方式可参考您使用的浏览器/设备的官方指引。
-
 #### 五、免责声明
 1. 本站仅提供证书信息的**查询展示服务**，无法保证查询信息的**真实性、准确性、完整性和时效性**，相关信息的原始真实性由信息录入方负责。
 2. 因您输入的查询关键词错误、设备网络故障、系统维护等原因导致的查询结果错误、无结果或服务暂时无法使用，本站不承担任何赔偿或补救责任。
 3. 本站根据法律法规要求或政府监管部门的合法指令，需要披露相关信息时，本站不承担任何责任。
-
 #### 六、政策变更
 本站有权根据业务发展、法律法规更新等情况，随时修改本隐私政策，修改后的政策将在本站直接公示，**无需单独通知您**，公示后即生效。您继续使用本站服务，即视为认可修改后的政策内容。`,
             
             serviceTerms: `### 服务协议
 **生效日期**：2026年2月27日
 本服务协议（以下简称“本协议”）是您与本站之间关于使用本站证书查询服务的**法律约定**，您通过任何方式使用本站服务，即视为您已仔细阅读、充分理解并自愿接受本协议全部条款，**本站保留对本协议的最终解释权**。
-
 #### 一、服务内容
 1. 本站为您提供**证书信息在线查询服务**，您可通过输入证书编号或身份证号，查询本站已录入的对应证书相关信息（包括证书编号、持证人姓名、发证日期、有效期等）。
 2. 本站的服务仅为**信息展示**，不提供证书真伪核验、证书补发/换发、信息修改等其他附加服务，相关增值服务需联系证书颁发机构办理。
 3. 本站有权根据系统维护、技术升级、业务调整等需要，临时或长期变更、暂停或终止全部/部分服务，且**无需提前通知您**，不承担因此给您造成的任何损失。
-
 #### 二、您的权利与义务
 1. 您有权在遵守本协议及法律法规的前提下，免费使用本站的查询服务，有权对服务体验提出建议。
 2. 您保证使用本站服务时，**输入的查询关键词真实、合法**，不利用本站服务查询非本人的证书信息，不从事侵犯他人合法权益、违反法律法规的行为。
 3. 您不得通过任何技术手段（包括但不限于爬虫、外挂、脚本自动查询等）恶意刷取、攻击本站服务，不得干扰本站的正常运行，否则本站有权直接限制您的IP查询权限，直至永久禁止使用。
 4. 您应对自己使用本站服务的行为及结果负责，因您的违规操作导致的法律责任，由您自行承担，本站有权追究您的侵权责任。
-
 #### 三、本站的权利与义务
 1. 本站有权制定并修改服务规则、隐私政策等，有权对恶意查询行为采取IP限制、清理记录等风控措施，以保障服务的正常运行。
 2. 本站将尽合理的技术努力，保障服务的稳定性和可用性，但**不做任何形式的承诺和保证**（包括但不限于明示、默示或法定的保证），不保证服务无故障、不间断，不保证查询结果完全准确。
 3. 本站有权对录入的证书信息进行添加、修改、删除等管理操作，且无需提前通知您，不承担因此导致的查询结果变化的责任。
 4. 本站不向您收取任何服务费用，也不会在服务过程中向您索取任何个人敏感信息（如身份证原件、银行卡信息、验证码等），请您提高警惕，谨防诈骗。
-
 #### 四、免责条款
 1. **本站对所有服务内容不做任何承诺和保证**，包括但不限于对服务的可用性、稳定性、查询信息的真实性、准确性、完整性、时效性的承诺和保证，本站不承担任何明示或默示的担保责任。
 2. 因不可抗力（包括但不限于地震、火灾、洪水、网络故障、政府指令、服务器故障等）导致本站服务无法正常使用，本站不承担任何赔偿或补救责任。
 3. 您通过本站查询到的信息仅作参考，**不能作为任何法律依据、业务凭证或证明材料**，因您使用该信息导致的任何民事、行政、刑事责任，均由您自行承担，本站不承担任何连带责任。
 4. 本站链接的第三方网站、广告内容等，与本站无关，您点击相关链接产生的任何后果，由您自行承担，本站不承担任何责任。
-
 #### 五、协议的变更与终止
 1. 本站有权根据法律法规更新、业务发展需要，随时修改本协议的内容，修改后的协议将在本站直接公示，公示后即生效，**无需单独通知您**。您继续使用本站服务，即视为认可修改后的协议内容。
 2. 您可随时停止使用本站服务，本协议自您停止使用之日起自动终止。
 3. 若您违反本协议任何条款，本站有权立即终止您的服务使用权限，清除相关记录，且不承担任何责任。
-
 #### 六、其他约定
 1. 本协议的订立、生效、解释、履行均适用中华人民共和国法律。
 2. 因本协议产生的任何争议，本站有权自行做出处理决定，该决定为最终处理结果。
 3. 本协议未约定的事项，本站有权通过公示的方式补充约定，补充约定与本协议具有同等法律效力。`
         };
-
         // IP限制和查询记录相关配置
         const LIMIT_CONFIG = {
             maxQueries: 5,          // 同一IP最大查询次数
@@ -256,16 +237,13 @@
             storageKey: 'queryRecords', // 本地存储键名
             ipLimitKey: 'ipLimitRecords' // IP限制记录键名
         };
-
         // 存储查询记录和IP限制记录
         let queryRecords = JSON.parse(localStorage.getItem(LIMIT_CONFIG.storageKey)) || [];
         let ipLimitRecords = JSON.parse(localStorage.getItem(LIMIT_CONFIG.ipLimitKey)) || {};
-
         // 获取用户IP（前端模拟）
         function getUserIP() {
             return localStorage.getItem('mockIP') || `192.168.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}`;
         }
-
         // 检查IP是否被限制
         function checkIPLimit(ip) {
             if (!ipLimitRecords[ip]) return false;
@@ -287,7 +265,6 @@
                 return false;
             }
         }
-
         // 记录查询行为
         function recordQuery(ip, keyword, hasResult) {
             const now = new Date();
@@ -314,7 +291,6 @@
                 localStorage.setItem(LIMIT_CONFIG.ipLimitKey, JSON.stringify(ipLimitRecords));
             }
         }
-
         // 清理过期记录
         function clearExpiredRecords() {
             const now = new Date().getTime();
@@ -328,7 +304,6 @@
             
             return queryRecords.length;
         }
-
         // ========== DOM元素获取 ==========
         // 查询相关
         const searchKeywordInput = document.getElementById('searchKeyword');
@@ -351,7 +326,6 @@
         const modalTitle = document.getElementById('modalTitle');
         const modalContent = document.getElementById('modalContent');
         const closeModalBtn = document.getElementById('closeModalBtn');
-
         // 初始化页面
         function initPage() {
             // 重置查询输入框
@@ -373,13 +347,11 @@
             // 自动清理过期记录
             clearExpiredRecords();
         }
-
         // 验证身份证号格式
         function validateIdCard(idCard) {
             const idCardRegex = /^\d{18}$/;
             return idCardRegex.test(idCard);
         }
-
         // 查询证书信息
         async function queryCertInfo() {
             // 检查IP限制
@@ -431,19 +403,16 @@
                 searchTip.classList.add('hidden');
             }
         }
-
         // 渲染查询结果
         function renderResults(results, keyword) {
             queryKeyword.textContent = `查询关键词：${keyword}`;
             resultContent.innerHTML = '';
-
             if (results.length === 0) {
                 // 无结果
                 resultSection.classList.add('hidden');
                 noResultSection.classList.remove('hidden');
                 return;
             }
-
             // 生成结果卡片
             results.forEach(result => {
                 const card = document.createElement('div');
@@ -477,11 +446,9 @@
                 card.innerHTML = cardContent;
                 resultContent.appendChild(card);
             });
-
             resultSection.classList.remove('hidden');
             noResultSection.classList.add('hidden');
         }
-
         // 身份证号脱敏处理
         function maskIdCard(idCard) {
             if (idCard.length === 18) {
@@ -489,7 +456,6 @@
             }
             return idCard;
         }
-
         // 打开条款弹窗
         function openTermsModal(type) {
             if (type === 'privacy') {
@@ -501,7 +467,6 @@
             }
             termsModal.classList.remove('hidden');
         }
-
         // 绑定事件
         // 查询相关
         searchBtn.addEventListener('click', queryCertInfo);
@@ -514,7 +479,6 @@
                 queryCertInfo();
             }
         });
-
         // 条款相关事件
         privacyLink.addEventListener('click', (e) => {
             e.preventDefault();
@@ -527,14 +491,12 @@
         closeModalBtn.addEventListener('click', () => {
             termsModal.classList.add('hidden');
         });
-
         // 页面加载初始化
         window.addEventListener('DOMContentLoaded', () => {
             initPage();
             // 自动清理过期记录
             clearExpiredRecords();
         });
-
         // 定时清理过期记录（每24小时）
         setInterval(clearExpiredRecords, 24 * 60 * 60 * 1000);
     </script>
