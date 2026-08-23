@@ -164,7 +164,7 @@
     </footer>
     <!-- JavaScript 逻辑 -->
     <script>
-        // 模拟数据库 - 存储证书信息，已更新姓名为朱鹏宇
+        // 模拟数据库 - 存储证书信息
         let certDatabase = [
             { certNo: "CZ20260001", idCard: "110101199001011234", name: "张三", issueDate: "2026-01-10", validity: "2026-01-10至2036-01-10" },
             { certNo: "CZ20260002", idCard: "310101199002021234", name: "李四", issueDate: "2026-02-15", validity: "2026-02-15至2036-02-15" },
@@ -496,6 +496,14 @@
             initPage();
             // 自动清理过期记录
             clearExpiredRecords();
+
+            // ====== 二维码扫码自动查询逻辑 ======
+            const urlParams = new URLSearchParams(window.location.search);
+            const sn = urlParams.get('sn');
+            if(sn){
+                searchKeywordInput.value = sn;
+                queryCertInfo();
+            }
         });
         // 定时清理过期记录（每24小时）
         setInterval(clearExpiredRecords, 24 * 60 * 60 * 1000);
